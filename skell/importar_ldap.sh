@@ -16,6 +16,7 @@ NO_COLOUR="printf \e[0m" #Branco
 DEFAULTCOS_DN="cn=default,cn=cos,cn=zimbra"
 DEFAULTEXTERNALCOS_DN="cn=defaultExternal,cn=cos,cn=zimbra"
 SERVER_HOSTNAME=$zimbra_server_hostname
+SERVER_LDAP_HOSTNAME=$ldap_master_url
 SESSION=`date +"%d_%b_%Y-%H-%M"`
 SESSION_LOG="registro-$SESSION.log"
 
@@ -71,7 +72,7 @@ echo ""
 $INFO_TEXT "Essa versao NAO cria ou importa os dominios, somente continue se ja tiver criado os dominios do ambiente"
 $INFO_TEXT "Importacao iniciada em: $SESSION" &> $SESSION_LOG
 $NORMAL_TEXT "Registro da sessao: $SESSION_LOG"
-ZIMBRAADMIN_DN=`ldapsearch -x -H ldap://$zimbra_server_hostname -D $zimbra_ldap_userdn -w $zimbra_ldap_password -b '' -LLL uid=admin dn | awk '{print $2}'` &>> $SESSION_LOG #OBTER DN DO ADMIN
+ZIMBRAADMIN_DN=`ldapsearch -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -b '' -LLL uid=admin dn | awk '{print $2}'` &>> $SESSION_LOG #OBTER DN DO ADMIN
 
 #INTERATIVIDADE: execucao da importacao
 test_exec()
@@ -95,7 +96,7 @@ read -p "Deseja importar o usuario ADMIN (sim/nao)?" choice
     case "$choice" in
 	  y|Y|yes|s|S|sim ) 
 	               $NORMAL_TEXT "Removendo ADMIN: $ZIMBRAADMIN_DN" 
-				   ldapdelete -r -x -H ldap://$zimbra_server_hostname -D $zimbra_ldap_userdn -c -w $zimbra_ldap_password $ZIMBRAADMIN_DN &>> $SESSION_LOG
+				   ldapdelete -r -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -c -w $zimbra_ldap_password $ZIMBRAADMIN_DN &>> $SESSION_LOG
 				   ;;
 	  n|N|no|nao ) $CHOICE_TEXT "O usuario admin nao sera importado. Utilize a senha da NOVA instalacao";;
 	  * ) test_importadmin ;;
@@ -107,18 +108,18 @@ test_importadmin #executa a funcao test_importadmin
 #INICIA IMPORTACAO DAS CLASSES DE SERVICO, CONTAS, NOMES ALTERNATIVOS E LISTAS DE DISTRIBUICAO
 ## REMOVE AS CLASSES DE SERVICO PADRAO DO ZIMBRA: DEFAULT E ZIMBRADEFAULT
 $INFO_TEXT "Removendo classes de servico padrao: Default e DefaultExternal"
-ldapdelete -r -x -H ldap://$zimbra_server_hostname -D $zimbra_ldap_userdn -c -w $zimbra_ldap_password $DEFAULTCOS_DN &>> $SESSION_LOG
-ldapdelete -r -x -H ldap://$zimbra_server_hostname -D $zimbra_ldap_userdn -c -w $zimbra_ldap_password $DEFAULTEXTERNALCOS_DN &>> $SESSION_LOG
+ldapdelete -r -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -c -w $zimbra_ldap_password $DEFAULTCOS_DN &>> $SESSION_LOG
+ldapdelete -r -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -c -w $zimbra_ldap_password $DEFAULTEXTERNALCOS_DN &>> $SESSION_LOG
 
 ## IMPORTACAO DAS COS, CONTAS, APELIDOS E LISTAS
 
 $INFO_TEXT "Importando classes de servico"
-ldapadd -c -x -H ldap://$zimbra_server_hostname -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f COS.ldif &>> $SESSION_LOG
+ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f COS.ldif &>> $SESSION_LOG
 $INFO_TEXT "Importando contas"
-ldapadd -c -x -H ldap://$zimbra_server_hostname -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f CONTAS.ldif &>> $SESSION_LOG
+ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f CONTAS.ldif &>> $SESSION_LOG
 $INFO_TEXT "importando nomes alternativos"
-ldapadd -c -x -H ldap://$zimbra_server_hostname -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f APELIDOS.ldif &>> $SESSION_LOG
+ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f APELIDOS.ldif &>> $SESSION_LOG
 $INFO_TEXT "importando listas de distribuicao"
-ldapadd -c -x -H ldap://$zimbra_server_hostname -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f LISTAS.ldif &>> $SESSION_LOG
+ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f LISTAS.ldif &>> $SESSION_LOG
 
 #
