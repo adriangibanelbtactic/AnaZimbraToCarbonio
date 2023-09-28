@@ -28,9 +28,9 @@ if [ "$(whoami)" != "zimbra" ]; then
 fi
 
 #FILES REQUIRED FOR EXECUTION
-declare -a ARQUIVOS_IMPORT=('ACCOUNTS.ldif' 'COS.ldif');
+declare -a IMPORT_FILES=('ACCOUNTS.ldif' 'COS.ldif');
 
-for i in "${ARQUIVOS_IMPORT[@]}"
+for i in "${IMPORT_FILES[@]}"
     do
     if [ -r $i ]
       then
@@ -118,7 +118,7 @@ ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_
 $INFO_TEXT "Importing accounts"
 ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f ACCOUNTS.ldif &>> $SESSION_LOG
 $INFO_TEXT "importing alias"
-ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f APELIDOS.ldif &>> $SESSION_LOG
+ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f ALIAS.ldif &>> $SESSION_LOG
 $INFO_TEXT "import distribution lists"
 ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f LISTAS.ldif &>> $SESSION_LOG
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 ###   Z2Z - Mantido por BKTECH <http://www.bktech.com.br>                         ###
 ###   Copyright (C) 2016  Fabio Soares Schmidt <fabio@respirandolinux.com.br>     ###
-###   PARA INFORMACOES SOBRE A FERRAMENTA, FAVOR LER OS ARQUIVOS README E INSTALL ###
+###   FOR INFORMATION ABOUT THE TOOL, PLEASE READ THE README AND INSTALL FILES    ###
 
 ###   VERSION 1.0.3 - Translated in english
 
@@ -47,10 +47,10 @@ ZIMBRA_BINDDN=$zimbra_ldap_userdn
 
 ####DIRECTORIS
 
-DIRETORIO=$WORKDIR
+DIRECTORY=$WORKDIR
 Check_Directory
 separator_char
-DIRETORIO="`pwd`/skell"
+DIRECTORY="`pwd`/skell"
 Check_Directory
 separator_char
 DESTINATION=$WORKDIR
@@ -82,10 +82,10 @@ mkdir $WORKDIR/alias #Create temporary directory to export alternative names
  for MAIL in $(cat $DESTINATION/lista_contas.ldif);
  	do 
 	      ldapsearch -x -H ldap://$ZIMBRA_HOSTNAME -D $ZIMBRA_BINDDN -w $zimbra_ldap_password -b '' -LLL "(&(uid=$MAIL)(objectclass=zimbraAlias))" > $DESTINATION/alias/$MAIL.ldif
-		  	cat $DESTINATION/alias/*.ldif > $DESTINATION/APELIDOS.ldif
+		  	cat $DESTINATION/alias/*.ldif > $DESTINATION/ALIAS.ldif
 			done 
 
-   $INFO_TEXT "ALIAS EXPORTED SUCCESSFULLY: $DESTINATION/APELIDOS.ldif"
+   $INFO_TEXT "ALIAS EXPORTED SUCCESSFULLY: $DESTINATION/ALIAS.ldif"
    separator_char
 
 #EXPORTING DISTRIBUTION LISTS
