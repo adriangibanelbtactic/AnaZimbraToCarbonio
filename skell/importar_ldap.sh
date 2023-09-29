@@ -28,9 +28,9 @@ if [ "$(whoami)" != "zimbra" ]; then
 fi
 
 #FILES REQUIRED FOR EXECUTION
-declare -a ARQUIVOS_IMPORT=('ACCOUNTS.ldif' 'COS.ldif');
+declare -a IMPORT_FILES=('ACCOUNTS.ldif' 'COS.ldif');
 
-for i in "${ARQUIVOS_IMPORT[@]}"
+for i in "${IMPORT_FILES[@]}"
     do
     if [ -r $i ]
       then
@@ -43,7 +43,7 @@ done
 
 #GETTING HOSTNAME IN ENTRIES TO CONFIRM IF IT MATCHES THE SERVER'S HOSTNAME
 LDIF_HOSTNAME=`grep zimbraMailHost ACCOUNTS.ldif | uniq | awk '{print $2}'`
-if [ "$SERVER_HOSTNAME" = "$LDIF_HOSTNAME" ]; then
+if [ "$SERVER_HOSTNAME" != "$LDIF_HOSTNAME" ]; then
 	   $ERROR_TEXT "ERROR: The server hostname does not match the hostname of the import files"
 	   $INFO_TEXT "Server hostname: $SERVER_HOSTNAME"
 	   $INFO_TEXT "Hostname in the files for import: $LDIF_HOSTNAME"
@@ -118,7 +118,7 @@ ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_
 $INFO_TEXT "Importing accounts"
 ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f ACCOUNTS.ldif &>> $SESSION_LOG
 $INFO_TEXT "importing alias"
-ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f APELIDOS.ldif &>> $SESSION_LOG
+ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f ALIAS.ldif &>> $SESSION_LOG
 $INFO_TEXT "import distribution lists"
 ldapadd -c -x -H ldap://$SERVER_LDAP_HOSTNAME -D $zimbra_ldap_userdn -w $zimbra_ldap_password -f LISTAS.ldif &>> $SESSION_LOG
 
