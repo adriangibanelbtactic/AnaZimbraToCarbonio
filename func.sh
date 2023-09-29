@@ -36,8 +36,8 @@ esac
 Check_Directory()
 {
 
-if [ ! -d "$DIRECTORY" ]; then
-	 $ERROR_TEXT "Error: The directory $DIRECTORY does not exist, aborting execution."
+if [ ! -d "$DIRETORIO" ]; then
+	 $ERROR_TEXT "Error: The directory $DIRETORIO does not exist, aborting execution."
 	 exit 1 
  else
 	 $INFO_TEXT "OK: Existing $DIRECTORY directory."
@@ -136,8 +136,8 @@ esac
 
 Execute_Replace_Hostname()
 {
-sed -i s/$OLD_HOSTNAME/$NEW_HOSTNAME/g $DESTINATION/ACCOUNTS.ldif
-sed -i s/$OLD_HOSTNAME/$NEW_HOSTNAME/g $DESTINATION/LISTAS.ldif
+sed -i s/$OLD_HOSTNAME/$NEW_HOSTNAME/g $DESTINO/ACCOUNTS.ldif
+sed -i s/$OLD_HOSTNAME/$NEW_HOSTNAME/g $DESTINO/LISTAS.ldif
 }
 
 ##
