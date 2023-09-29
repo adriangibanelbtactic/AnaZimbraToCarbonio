@@ -43,7 +43,7 @@ done
 
 #GETTING HOSTNAME IN ENTRIES TO CONFIRM IF IT MATCHES THE SERVER'S HOSTNAME
 LDIF_HOSTNAME=`grep zimbraMailHost ACCOUNTS.ldif | uniq | awk '{print $2}'`
-if [ "$SERVER_HOSTNAME" != "$LDIF_HOSTNAME" ]; then
+if [ "$SERVER_HOSTNAME" = "$LDIF_HOSTNAME" ]; then
 	   $ERROR_TEXT "ERROR: The server hostname does not match the hostname of the import files"
 	   $INFO_TEXT "Server hostname: $SERVER_HOSTNAME"
 	   $INFO_TEXT "Hostname in the files for import: $LDIF_HOSTNAME"
